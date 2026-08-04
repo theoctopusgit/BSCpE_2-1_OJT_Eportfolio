@@ -318,11 +318,14 @@ export default function ManageUsersSection({ onViewStudent, onCountChange }: Man
               />
               <select
                 value={createRole}
-                onChange={(e) => setCreateRole(e.target.value as "normal" | "admin")}
+                onChange={(e) => setCreateRole(e.target.value as "normal" | "admin" | "prof")}
                 style={{ padding: "0.6rem", borderRadius: "0.5rem", border: "1px solid #cbd5e1", fontSize: "0.85rem" }}
               >
                 <option value="normal">Student</option>
                 <option value="admin">Admin</option>
+                <option value="prof" disabled={profExists}>
+                  {profExists ? "Professor (already exists)" : "Professor"}
+                </option>
               </select>
               {createError && <div style={{ color: "#ef4444", fontSize: "0.8rem" }}>{createError}</div>}
               <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end", marginTop: "0.5rem" }}>
