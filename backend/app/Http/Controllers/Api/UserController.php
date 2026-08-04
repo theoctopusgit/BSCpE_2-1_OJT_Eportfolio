@@ -254,4 +254,34 @@ class UserController extends Controller
             'is_active' => $user->is_active,
         ]);
     }
+
+/**
+     * Permanently delete a user account. No longer blocks on existing
+     * documents — the frontend warns with a document count and requires
+     * explicit confirmation before calling this. Cascades documents/DTRs
+     * and setup tokens at the DB level (see migrations).
+     */
+    public function destroy(Request $request, User $user)
+    {
+        $documentCount = $user->documents()->count();
+
+        ActivityLog::create([
+            'actor_id' => $request->user()->id,
+            'action' => 'account_deleted',
+            'target_id' => $user->id,
+            'metadata' => [
+                'deleted_name' => $user->name,
+                'deleted_email' => $user->email,
+                'deleted_role' => $user->role,
+                'documents_deleted' => $documentCount,
+            ],
+        ]);
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account permanently deleted.',
+            'documents_deleted' => $documentCount,
+        ]);
+    }
 }
