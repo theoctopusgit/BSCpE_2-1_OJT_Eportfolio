@@ -96,8 +96,14 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'role' => ['required', Rule::in(['normal', 'admin'])],
+            'role' => ['required', Rule::in(['normal', 'admin', 'prof'])],
         ]);
+
+        if ($validated['role'] === 'prof' && User::where('role', 'prof')->exists()) {
+            return response()->json([
+                'message' => 'A professor account already exists. Only one active professor account is allowed at a time.',
+            ], 422);
+        }
 
         if ($validated['role'] === 'normal') {
             $user = User::create([
