@@ -108,8 +108,17 @@ export default function ManageUsersSection({ onViewStudent, onCountChange }: Man
         }),
       });
       setShowCreate(false);
-      setRevealPassword({ email: data.user.email, password: data.temp_password });
-      loadUsers();
+      if (createRole === "normal") {
+        await showAlert(
+          `${createName.trim()} has been created and a setup link has been emailed to them.`,
+          "success",
+          "Account Created"
+        );
+        loadUsers();
+      } else {
+        setRevealPassword({ email: data.user.email, password: data.temp_password });
+        loadUsers();
+      }
     } catch (err) {
       const e = err as { message?: string };
       setCreateError(e.message || "Failed to create account.");
