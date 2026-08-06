@@ -256,9 +256,31 @@ class UserController extends Controller
         ]);
 
         $previousCompanyId = $user->company_id;
-        $user->update(['company_id' => $request->company_id]);
+        $newCompanyId = $request->company_id;
+
+        // 1. Update legacy user table column
+        $user->update(['company_id' => $newCompanyId]);
         $user->load('company:id,name');
 
+        // 2. Sync/upsert active deployment record
+        if ($newCompanyId) {
+            $deployment = \App\Models\Deployment::where('user_id', $user->id)
+                ->orderByRaw("status = 'confirmed' desc")
+                ->latest('id')
+                ->first();
+
+            if ($deployment) {
+                $deployment->update(['company_id' => $newCompanyId]);
+            } else {
+                \App\Models\Deployment::create([
+                    'user_id' => $user->id,
+                    'company_id' => $newCompanyId,
+                    'status' => 'pending_confirmation',
+                ]);
+            }
+        }
+
+        // 3. Log activity
         ActivityLog::create([
             'actor_id' => $request->user()->id,
             'action' => 'company_reassigned',
