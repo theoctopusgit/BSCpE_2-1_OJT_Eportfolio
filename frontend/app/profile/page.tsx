@@ -481,6 +481,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="field-grid" style={{ marginBottom: "1.5rem" }}>
                     <FieldDisplay label="Supervisor" value={deployment.supervisor_name || ""} />
+                    <FieldDisplay label="Role" value={deployment.role || ""} />
                     <FieldDisplay label="Start Date" value={deployment.start_date ? deployment.start_date.slice(0, 10) : ""} />
                     <FieldDisplay label="End Date" value={deployment.end_date ? deployment.end_date.slice(0, 10) : ""} />
                   </div>
