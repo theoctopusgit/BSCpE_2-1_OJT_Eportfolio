@@ -92,7 +92,7 @@ function StatusBadge({ status }: { status: "not_submitted" | "submitted" | "pend
 }
 
 /* ═══════════════════════════ Document Card ══════════════════════ */
-function DocumentCardItem({ doc, onUpload, onRemove, onView }: { doc: { id: string, name: string, status: string, date: string, fileLink?: string, reviewStatus?: "pending" | "approved" | "rejected", rejectionReason?: string | null, week?: number }, onUpload: (id: string, file: File, week?: number) => void, onRemove: (id: string) => void, onView: (title: string, fileLink: string) => void }) {
+function DocumentCardItem({ doc, onUpload, onRemove, onView }: { doc: { id: string, name: string, status: "not_submitted" | "submitted" | "uploading", date: string, fileLink?: string, reviewStatus?: "pending" | "approved" | "rejected", rejectionReason?: string | null, week?: number }, onUpload: (id: string, file: File, week?: number) => void, onRemove: (id: string) => void, onView: (title: string, fileLink: string) => void }) {
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -125,7 +125,6 @@ function DocumentCardItem({ doc, onUpload, onRemove, onView }: { doc: { id: stri
       {/* Header Area */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.25rem", gap: "1rem" }}>
         <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#0f172a", margin: 0, lineHeight: 1.3 }}>{doc.name}</h3>
-        {/* @ts-expect-error status prop type mismatch with StatusBadge */}
         <StatusBadge status={badgeStatus} />
       </div>
 
@@ -481,10 +480,9 @@ export default function ProfilePage() {
                     {profileData?.company?.address || "Location pending..."}
                   </div>
                   <div className="field-grid" style={{ marginBottom: "1.5rem" }}>
-                    <FieldDisplay label="Supervisor" value={deployment.supervisorname || ""} />
-                    <FieldDisplay label="Role" value={deployment.role || ""} />
-                    <FieldDisplay label="Start Date" value={deployment.startdate ? deployment.startdate.slice(0, 10) : ""} />
-                    <FieldDisplay label="End Date" value={deployment.enddate ? deployment.enddate.slice(0, 10) : ""} />
+                    <FieldDisplay label="Supervisor" value={deployment.supervisor_name || ""} />
+                    <FieldDisplay label="Start Date" value={deployment.start_date ? deployment.start_date.slice(0, 10) : ""} />
+                    <FieldDisplay label="End Date" value={deployment.end_date ? deployment.end_date.slice(0, 10) : ""} />
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "1.25rem", borderTop: "2px solid #f1f5f9" }}>
                     <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase" }}>Deployment Status</span>
