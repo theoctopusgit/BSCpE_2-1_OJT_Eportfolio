@@ -5,6 +5,7 @@ use App\Mail\AccountSetupMail;
 use App\Models\User;
 use App\Models\ActivityLog;
 use App\Services\AccountSetupService;
+use App\Services\DeploymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -76,11 +77,11 @@ class UserController extends Controller
      * Full detail for a single student, including their documents —
      * powers the admin/prof review side panel. Admin/prof only (route middleware).
      */
-    public function show(Request $request, User $user)
+    public function show(Request $request, User $user, DeploymentService $deploymentService)
     {
         $user->load('company');
         $user->load(['documents' => fn ($q) => $q->orderBy('created_at', 'desc')]);
-
+        $user->setAttribute('deployment', $deploymentService->getForUser($user));
         return response()->json($user);
     }
 

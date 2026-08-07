@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/admin/users/{user}/deactivate', [UserController::class, 'deactivate'])->middleware('role:admin');
     Route::patch('/admin/users/{user}/reactivate', [UserController::class, 'reactivate'])->middleware('role:admin');
     Route::get('/admin/users/{user}', [UserController::class, 'show'])->middleware('role:admin,prof');
+    Route::patch('/admin/deployments/{deployment}/override', [DeploymentController::class, 'adminOverride'])->middleware('role:admin');
     Route::post('/admin/users/{user}/resend-setup', [UserController::class, 'resendSetup'])->middleware('role:admin');
     Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->middleware('role:admin');
     Route::get('/admin/activity-logs', [ActivityLogController::class, 'index'])->middleware('role:admin');

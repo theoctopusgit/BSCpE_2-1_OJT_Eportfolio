@@ -48,13 +48,22 @@ class DeploymentController extends Controller
             $request->user(),
             $request->validated()
         );
-
         return response()->json([
             'message' => 'Deployment updated successfully',
             'deployment' => $updated,
         ]);
     }
-
+    public function adminOverride(ConfirmDeploymentRequest $request, Deployment $deployment): JsonResponse
+    {
+        $updated = $this->deploymentService->adminOverride(
+            $deployment,
+            $request->validated()
+        );
+        return response()->json([
+            'message' => 'Deployment updated by admin',
+            'deployment' => $updated,
+        ]);
+    }
     public function export(): \Symfony\Component\HttpFoundation\StreamedResponse
     {
     $csvData = $this->deploymentService->exportConfirmedCsv();

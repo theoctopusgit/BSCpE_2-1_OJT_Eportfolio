@@ -17,6 +17,8 @@ export interface ManagedUser {
   approved_documents_count?: number;
   pending_documents_count?: number;
   rejected_documents_count?: number;
+  hours_rendered?: string | null;
+  required_hours?: number | null;
 }
 function IconPlus() {
   return (
